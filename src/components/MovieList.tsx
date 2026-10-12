@@ -1,22 +1,23 @@
-import type { Movie } from "../types"
-import MovieCard from "./MovieCard"
+import { Movie, Genre } from "../types";
+import MovieCard from "./MovieCard";
 
-interface MovieListProps {
-  movies: Movie[]
-}
+type MovieListProps = {
+    movies: Movie[];
+    genres?: Genre[];
+};
 
-const MovieList = ({ movies }: MovieListProps) => {
-  if (!movies.length) {
-    return <p>No movies found.</p>
-  }
+const MovieList = ({ movies, genres = [] }: MovieListProps) => {
+    if (movies.length === 0) {
+        return <p>No movies found.</p>;
+    }
 
-  return (
-    <div className="movies-grid">
-      {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))}
-    </div>
-  )
-}
+    return (
+        <div className="movies-grid">
+            {movies.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} genres={genres} />
+            ))}
+        </div>
+    );
+};
 
-export default MovieList
+export default MovieList;

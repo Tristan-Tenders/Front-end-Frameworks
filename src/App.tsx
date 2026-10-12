@@ -1,32 +1,47 @@
-import { useState } from "react"
-import SearchBar from "./components/SearchBar"
-import MovieList from "./components/MovieList"
-import { SAMPLE_MOVIES } from "./data/sampleMovies"
+import { useState } from "react";
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import SearchBar from "./components/SearchBar";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
-function App() {
-  const [query, setQuery] = useState("")
-
-  const filteredMovies = SAMPLE_MOVIES.filter((movie) =>
-    movie.title.toLowerCase().includes(query.toLowerCase())
-  )
+const App = () => {
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="app-layout">
-      <header className="site-header">
-        <div className="header-inner">
-          <div className="brand-logo">
-            <span className="logo-dot" />
-            <span className="logo-text">Movie App</span>
-          </div>
-          <SearchBar query={query} onChange={setQuery} />
-        </div>
-      </header>
-      <main className="main-container">
-        <h1>Movie App</h1>
-        <MovieList movies={filteredMovies} />
-      </main>
-    </div>
-  )
-}
+    <BrowserRouter>
+      <div className="app-layout">
+        <header className="site-header">
+          <div className="header-inner">
+            <div className="header-left">
+              <div className="brand-logo">
+                <div className="logo-dot"></div>
+                <span className="logo-text">CINE&middot;GRID</span>
+              </div>
+              <nav className="header-nav">
+                <NavLink to="/" end>Home</NavLink>
+                <NavLink to="/about">About</NavLink>
+              </nav>
+            </div>
 
-export default App
+            <div className="header-search">
+              <SearchBar query={searchQuery} onChange={setSearchQuery} />
+            </div>
+
+            <div className="header-actions">
+              <button className="btn-icon-label">Watchlist 0</button>
+              <button className="btn-icon-label">icon here</button>
+            </div>
+          </div>
+        </header>
+        <Routes>
+          <Route path="/" element={<HomePage searchQuery={searchQuery} />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+};
+
+export default App;
