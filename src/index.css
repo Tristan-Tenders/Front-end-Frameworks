@@ -876,6 +876,17 @@ select {
   transform: translateY(-2px);
 }
 
+.btn-icon-label:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.random-pick-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
 .btn-secondary {
   display: inline-flex;
   align-items: center;

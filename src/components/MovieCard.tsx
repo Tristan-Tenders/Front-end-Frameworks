@@ -1,21 +1,22 @@
-import { useState } from "react"
 import { Movie, Genre } from "../types"
+import { useAppContext } from "../context/AppContext"
 import { getPosterUrl } from "../data/sampleMovies"
 
 type MovieCardProps = {
     movie: Movie;
     genres?: Genre[];
-    onClick?: () => void;
+    onMovieClick?: (movie: Movie) => void;
 };
 
-const MovieCard = ({ movie, genres = [], onClick }: MovieCardProps) => {
-    const [isFavourite, setIsFavourite] = useState(false);
+const MovieCard = ({ movie, genres = [], onMovieClick }: MovieCardProps) => {
+    const { toggleFavorite, isFavorite } = useAppContext();
+    const isFavourite = isFavorite(movie.id);
     const genreNames = movie.genre_ids
         .map((id) => genres.find((g) => g.id === id)?.name)
         .filter((name): name is string => Boolean(name));
 
     return (
-        <section className="movie-card" onClick={onClick}>
+        <section className="movie-card" onClick={() => onMovieClick?.(movie)}>
             <div className="poster-wrapper">
                 <img className="poster-img" src={getPosterUrl(movie.poster_path)} alt={movie.title} loading="lazy" />
                 <div className="poster-overlay">
@@ -31,7 +32,7 @@ const MovieCard = ({ movie, genres = [], onClick }: MovieCardProps) => {
                             title={isFavourite ? "Remove from Favourites" : "Add to Favourites"}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setIsFavourite((prev) => !prev);
+                                toggleFavorite(movie);
                             }}
                         >
                             <svg
@@ -46,6 +47,19 @@ const MovieCard = ({ movie, genres = [], onClick }: MovieCardProps) => {
                             </svg>
                         </button>
                     </div>
+                    <span
+                        className="quick-view-hint"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                onMovieClick?.(movie);
+                            }
+                        }}
+                    >
+                        View Details
+                    </span>
                 </div>
             </div>
             <div className="movie-card-info">
